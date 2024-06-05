@@ -1,0 +1,11 @@
+google-ads
+requests
+pandas
+numpy
+scikit-learn
+tensorflow
+matplotlib
+python-dotenv
+flask
+lxml
+beautifulsoup4
