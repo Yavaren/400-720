@@ -27,3 +27,9 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           python fetch-trends.py
+
+      - name: Upload data artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: combined-trends-data
+          path: data/combined_trends_data.csv

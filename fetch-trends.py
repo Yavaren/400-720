@@ -31,5 +31,10 @@ def fetch_trends_data(keywords, geo='US', timeframe='2020-06-04 2024-06-04'):
         print("No data collected for any keyword.")
 
 if __name__ == "__main__":
-    kw_list = ["smartphone", "laptop", "headphones"]
+    kw_list = [
+        "smartphone", "laptop", "headphones", "tablet", "smartwatch", 
+        "gaming console", "VR headset", "smart home", "wireless charger", 
+        "action camera", "4K TV", "drone", "Bluetooth speaker", 
+        "electric scooter", "fitness tracker", "robot vacuum", 
+        "portable projector", "3D printer", "AI assistant", "wearable tech"]    
     fetch_trends_data(kw_list, geo='US', timeframe='2020-06-04 2024-06-04')
