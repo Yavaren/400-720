@@ -25,4 +25,4 @@ jobs:
 
       - name: Run script
         run: |
-          python .github/workflows/fetch-trends.py
+          python fetch-trends.py
