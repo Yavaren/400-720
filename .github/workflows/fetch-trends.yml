@@ -25,4 +25,5 @@ jobs:
 
       - name: Run script
         run: |
+          cd $GITHUB_WORKSPACE
           python fetch-trends.py
