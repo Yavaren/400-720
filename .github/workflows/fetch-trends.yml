@@ -1,4 +1,4 @@
-name: Fetch Trends Data
+name: Full-scale-scrapper
 
 on:
   workflow_dispatch:
