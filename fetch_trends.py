@@ -1,4 +1,5 @@
 import os
+import random
 from pytrends.request import TrendReq
 import pandas as pd
 import time
@@ -32,7 +33,8 @@ def fetch_trends_data(keywords, geo, timeframe='2020-06-04 2024-06-04', start_in
                 for timestamp in data_dict.keys():
                     if timestamp != 'Product':
                         data_dict[timestamp].append(None)
-            time.sleep(120)  # Wait for 120 seconds to avoid hitting the rate limit
+            delay = random.randint(120, 140)  # Random delay between 120 and 140 seconds
+            time.sleep(delay)
         except Exception as e:
             if 'too many requests' in str(e).lower():
                 print(f"Too many requests error for keyword {keyword} in {geo}. Sleeping for 30 minutes.")
@@ -84,7 +86,7 @@ def save_data(data_dict, start_index, end_index):
         print("No data collected for any keyword.")
 
 if __name__ == "__main__":
-    # Hardcoded file path for testing
+    # Relative path to the CSV file in the repository
     csv_file_path = 'product-list/apparel_and_clothes_eng.csv'
     start_index = int(os.getenv('START_INDEX', '1'))
     end_index = int(os.getenv('END_INDEX', '250'))
