@@ -1,19 +1,18 @@
 import os
 import random
+import time
 from pytrends.request import TrendReq
 import pandas as pd
-import time
 
-# Function to read keywords from a CSV file based on index range
 def read_keywords_from_csv(file_path, start_index, end_index):
     df = pd.read_csv(file_path)
-    keywords = df.loc[(df['Index'] >= start_index) & (df['Index'] <= end_index), 'Product'].tolist()
+    keywords = df.loc[(df.index >= start_index) & (df.index <= end_index), 'Product'].tolist()
     return keywords
 
 def fetch_trends_data(keywords, geo, timeframe='2020-06-04 2024-06-04', start_index=1, end_index=250):
     pytrends = TrendReq(hl='en-US', tz=360)
     data_dict = {'Product': []}
-    
+
     for keyword in keywords:
         data_dict['Product'].append(keyword)
         try:
@@ -33,14 +32,15 @@ def fetch_trends_data(keywords, geo, timeframe='2020-06-04 2024-06-04', start_in
                 for timestamp in data_dict.keys():
                     if timestamp != 'Product':
                         data_dict[timestamp].append(None)
-            delay = random.randint(120, 140)  # Random delay between 120 and 140 seconds
+            delay = random.randint(180, 300)  # Increased delay between 3 and 5 minutes
+            print(f"Sleeping for {delay} seconds")
             time.sleep(delay)
+            print(f"Resuming after sleep")
         except Exception as e:
+            print(f"An error occurred for keyword {keyword} in {geo}: {e}")
             if 'too many requests' in str(e).lower():
                 print(f"Too many requests error for keyword {keyword} in {geo}. Sleeping for 30 minutes.")
                 time.sleep(1800)  # Wait for 30 minutes before retrying
-            else:
-                print(f"An error occurred for keyword {keyword} in {geo}: {e}")
             for timestamp in data_dict.keys():
                 if timestamp != 'Product':
                     data_dict[timestamp].append(None)
