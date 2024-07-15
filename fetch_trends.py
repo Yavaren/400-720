@@ -85,7 +85,7 @@ def save_data(data_dict, start_index, end_index):
 
 if __name__ == "__main__":
     # Hardcoded file path for testing
-    csv_file_path = '/Users/yavaren/Documents/Documents/Spirex/spirex-data/product-list/apparel_and_clothes-eng.csv'
+    csv_file_path = '/Users/yavaren/Documents/Documents/Spirex/spirex-data/product-list/apparel_and_clothes_eng.csv'
     start_index = int(os.getenv('START_INDEX', '1'))
     end_index = int(os.getenv('END_INDEX', '250'))
 
