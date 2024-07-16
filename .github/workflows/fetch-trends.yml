@@ -19,13 +19,13 @@ jobs:
       - name: Verify Python installation
         run: |
           echo "Checking Python installation"
-          python --version
+          python3 --version
           which python
 
       - name: Create virtual environment
         run: |
           echo "Creating virtual environment"
-          python -m venv venv
+          python3 -m venv venv
         shell: bash
 
       - name: Debug virtual environment
@@ -34,14 +34,14 @@ jobs:
           ls -alh venv/bin
           echo "Checking Python version in virtual environment"
           source venv/bin/activate
-          python --version
+          python3 --version
         shell: bash
 
       - name: Install dependencies
         run: |
           echo "Activating virtual environment and installing dependencies"
           source venv/bin/activate
-          python -m pip install --upgrade pip
+          python3 -m pip install --upgrade pip
           pip install -r requirements.txt
         shell: bash
 
@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "Running fetch_trends.py"
           source venv/bin/activate
-          python fetch_trends.py
+          python3 fetch_trends.py
         shell: bash
 
       - name: Upload data artifact
