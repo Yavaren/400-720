@@ -16,8 +16,11 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Display Python version
-        run: python --version
+      - name: Verify Python installation
+        run: |
+          echo "Checking Python installation"
+          python --version
+          which python
 
       - name: Create virtual environment
         run: |
@@ -29,6 +32,9 @@ jobs:
         run: |
           echo "Listing venv/bin directory contents"
           ls -alh venv/bin
+          echo "Checking Python version in virtual environment"
+          source venv/bin/activate
+          python --version
         shell: bash
 
       - name: Install dependencies
