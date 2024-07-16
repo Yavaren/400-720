@@ -6,15 +6,7 @@ on:
 jobs:
   fetch_trends:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        index-range:
-          - { start: 1, end: 250 }
-          - { start: 251, end: 500 }
-          - { start: 501, end: 750 }
-          - { start: 751, end: 1000 }
-          - { start: 1001, end: 1250 }
-          # Add more ranges as needed
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -24,46 +16,35 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install dependencies
+      - name: Display Python version
+        run: python --version
+
+      - name: Create virtual environment
+        run: python -m venv venv
+
+      - name: Debug virtual environment
         run: |
+          ls -alh venv/bin
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run script
+        shell: bash
         env:
-          START_INDEX: ${{ matrix.index-range.start }}
-          END_INDEX: ${{ matrix.index-range.end }}
-          CSV_FILE_PATH: "/Users/yavaren/Documents/Documents/Spirex/spirex-data/product-list/apparel_and_clothes-eng.csv"
+          START_INDEX: 1
+          END_INDEX: 250
+          CSV_FILE_PATH: product-list/apparel_and_clothes.csv
         run: |
-          cd $GITHUB_WORKSPACE
+          source venv/bin/activate
           python fetch_trends.py
 
       - name: Upload data artifact
         uses: actions/upload-artifact@v3
         with:
-          name: combined-trends-data-${{ matrix.index-range.start }}-to-${{ matrix.index-range.end }}
-          path: data/combined_trends_data_${{ matrix.index-range.start }}_to_${{ matrix.index-range.end }}.csv
-
-  merge_results:
-    runs-on: ubuntu-latest
-    needs: fetch_trends
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Download data artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: combined-trends-data-*
-          path: data/
-
-      - name: Merge data files
-        run: |
-          cd $GITHUB_WORKSPACE
-          python merge_files.py
-
-      - name: Upload final merged data artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: final-merged-trends-data
-          path: data/final_combined_trends_data.csv
+          name: combined-trends-data
+          path: data/combined_trends_data_1_to_250.csv
