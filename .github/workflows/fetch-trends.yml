@@ -20,28 +20,35 @@ jobs:
         run: python --version
 
       - name: Create virtual environment
-        run: python -m venv venv
+        run: |
+          echo "Creating virtual environment"
+          python -m venv venv
+        shell: bash
 
       - name: Debug virtual environment
         run: |
+          echo "Listing venv/bin directory contents"
           ls -alh venv/bin
+        shell: bash
 
       - name: Install dependencies
-        shell: bash
         run: |
+          echo "Activating virtual environment and installing dependencies"
           source venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+        shell: bash
 
       - name: Run script
-        shell: bash
         env:
           START_INDEX: 1
           END_INDEX: 250
           CSV_FILE_PATH: product-list/apparel_and_clothes.csv
         run: |
+          echo "Running fetch_trends.py"
           source venv/bin/activate
           python fetch_trends.py
+        shell: bash
 
       - name: Upload data artifact
         uses: actions/upload-artifact@v3
