@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        start: [1, 81, 161, 241, 321] # Adjust these values to cover all your indices
+        start: [321, 401, 481, 561, 641] # Adjust these values to cover all your indices
 
     steps:
       - uses: actions/checkout@v2
