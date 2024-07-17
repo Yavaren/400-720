@@ -6,58 +6,55 @@ on:
 jobs:
   fetch_trends:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        start: [1, 81, 161, 241, 321] # Adjust these values to cover all your indices
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
 
-      - name: Verify Python installation
-        run: |
-          echo "Checking Python installation"
+      - run: |
           python3 --version
           which python3
-
-      - name: Create virtual environment
-        run: |
-          echo "Creating virtual environment"
           python3 -m venv venv
-        shell: bash
-
-      - name: Debug virtual environment
-        run: |
-          echo "Listing venv/bin directory contents"
-          ls -alh venv/bin
-          echo "Checking Python version in virtual environment"
           source venv/bin/activate
           python --version
-        shell: bash
-
-      - name: Install dependencies
-        run: |
-          echo "Activating virtual environment and installing dependencies"
-          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        shell: bash
-
-      - name: Run script
-        env:
-          START_INDEX: 1
-          END_INDEX: 250
-          CSV_FILE_PATH: product-list/apparel_and_clothes.csv
-        run: |
-          echo "Running fetch_trends.py"
-          source venv/bin/activate
+          END_INDEX=$(( ${{ matrix.start }} + 79 ))
           python fetch_trends.py
+        env:
+          START_INDEX: ${{ matrix.start }}
+          CSV_FILE_PATH: product-list/apparel_and_clothes.csv
         shell: bash
 
-      - name: Upload data artifact
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
-          name: combined-trends-data
-          path: data/combined_trends_data_1_to_250.csv
+          name: combined-trends-data-${{ matrix.start }}-to-${{ matrix.start }}+79
+          path: data/combined_trends_data_${{ matrix.start }}_to_${{ matrix.start }}+79.csv
+
+  combine_data:
+    runs-on: ubuntu-latest
+    needs: fetch_trends
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: combined-trends-data-*
+
+      - run: |
+          python combine_data.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: combined-trends-data-final
+          path: data/combined_trends_data_final.csv
